@@ -1,0 +1,68 @@
+﻿
+@model IEnumerable<WebApplication2.Models.ShopingCartModel>
+    
+
+@{ 
+    ViewBag.Title = "ShoppingCart";
+    const string CONTROLLER_NAME = "ShopingCartController";
+    var breadAmount = 0;
+    var bananaBreadAmount = 0;
+    var cookiesAmount = 0;
+    var muffinsAmount = 0;
+    var donutsAmount = 0;
+    double total = 0;
+    foreach(WebApplication2.Models.ShopingCartItem item in (IEnumerable<WebApplication2.Models.ShopingCartItem>)ViewData["cart"])
+    {
+        if (item.Id == 0)
+        {
+            breadAmount = item.Amount;
+        }
+        else if (item.Id == 1)
+        {
+            bananaBreadAmount = item.Amount;
+        }
+        else if (item.Id == 2)
+        {
+            cookiesAmount = item.Amount;
+        }
+        else if (item.Id == 3)
+        {
+            muffinsAmount = item.Amount;
+        }
+        else if (item.Id == 4)
+        {
+            donutsAmount = item.Amount;
+        }
+        total += item.Amount * item.Price;
+    }
+
+
+}
+
+
+<head>
+    <link rel="stylesheet" href="~/Content/MyStyle.css">
+</head>
+<header>Platteville Bakery <img src="~/img/pb.jpg" /></header>
+<div class="backcolor">
+    <h1>Shopping Cart</h1>
+</div>
+
+<body>
+    <p>
+        Please feel free to add items to your cart. After addind items, you will also be able to change the quantity and take items out of your cart if you change your mind.
+    </p>
+    @using (Html.BeginForm("UpdateBread", CONTROLLER_NAME, FormMethod.Post))
+    {
+        @Html.TextBoxFor(model => model.Email)
+        @Html.ValidationMessageFor(model => model.Email)
+        <button type="submit">Subscribe</button>
+    }
+    <p>Fresh Bread : $3.00    @Html.ActionLink("Add 1", "AddActionBread", CONTROLLER_NAME, null) @Html.ActionLink(" Remove 1", "RemoveActionBread", CONTROLLER_NAME, null) Current Quantity: @breadAmount</p>
+    <p>Banana Bread : $4.00    @Html.ActionLink("Add 1", "AddActionBananaBread", CONTROLLER_NAME, null) @Html.ActionLink(" Remove 1", "RemoveActionBananaBread", CONTROLLER_NAME, null) Current Quantity: @bananaBreadAmount</p>
+    <p>Cookies : $3.50    @Html.ActionLink("Add 1", "AddActionCookies", CONTROLLER_NAME, null) @Html.ActionLink("Remove 1", "RemoveActionCookies", CONTROLLER_NAME, null) Current Quantity: @cookiesAmount</p>
+    <p>Muffins : $3.75    @Html.ActionLink("Add 1", "AddActionMuffins", CONTROLLER_NAME, null) @Html.ActionLink("Remove 1", "RemoveActionMuffins", CONTROLLER_NAME, null) Current Quantity: @muffinsAmount</p>
+    <p>Donuts : $2.50    @Html.ActionLink("Add 1", "AddActionDonuts", CONTROLLER_NAME, null) @Html.ActionLink("Remove 1", "RemoveActionDonuts", CONTROLLER_NAME, null) Current Quantity: @donutsAmount</p>
+    <p> Total Price: $@total</p>
+</body>
+<footer>Copyright &copy 2021 by UW-Platteville</footer>

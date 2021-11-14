@@ -1,0 +1,58 @@
+﻿body {
+}
+header {
+    background-color: grey;
+    color: blue;
+    font-size: 85px;
+}
+
+h1 {
+    color: orange;
+    font-size: 50px
+}
+
+footer {
+    background-color: black;
+    color: white
+}
+
+table, th, td {
+    border: 1px solid black;
+    width: 50%;
+    background-color: lightgrey;
+}
+
+#PB {
+    background-color: lightskyblue
+}
+
+#sundayColor {
+    color: red;
+}
+
+#saturdayColor {
+    color: red;
+}
+
+#firstHeadline {
+    color: darkorange;
+}
+
+.backcolor {
+    background-color: lightgray;
+}
+
+#title {
+    background-color: lightgray;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    float: left;
+}
+  

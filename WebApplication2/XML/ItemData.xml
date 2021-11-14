@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+	<item id="0">
+		<name>Bread</name>
+		<price>3.00</price>
+	</item>
+	<item id="1">
+		<name>Bannana Bread</name>
+		<price>4.00</price>
+	</item>
+	<item id="2">
+		<name>Cookies</name>
+		<price>3.50</price>
+	</item>
+	<item id="3">
+		<name>Muffins</name>
+		<price>3.75</price>
+	</item>
+	<item id="4">
+		<name>Donuts</name>
+		<price>2.50</price>
+	</item>
+</items>
