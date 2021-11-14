@@ -196,6 +196,69 @@ namespace WebApplication2.Controllers
             return View("ShoppingCart");
         }
 
+        [HttpPost]
+        public ActionResult UpdateItemAmounts(string breadamount, string bananaBreadAmount, string cookiesAmount, string muffinsAmount, string donutsAmount)
+        {
+            bool validInput = true;
+            int[] ids = { BREAD, BANANA_BREAD, COOKIES, MUFFINS, DONUTS };
+            string[] stringValues = { breadamount, bananaBreadAmount, cookiesAmount, muffinsAmount, donutsAmount };
+            int[] values = new int[5];
+            for(int i = 0; i < 5; i++)
+            {
+                if (!int.TryParse(stringValues[i], out values[i]))
+                {
+                    validInput = false;
+                    break;
+                }
+                else
+                {
+                    if(values[i] < 0)
+                    {
+                        validInput = false;
+                        break;
+                    }
+                }
+            }
+
+            if (validInput)
+            {
+                shopingCartModel = new ShopingCartModel();
+                ReadInItemData();
+                ReadInShopingCartData();
+                for (int i = 0; i < 5; i++)
+                {
+                    int amountInModel = this.CheckModelForItem(ids[i]);
+                    if(amountInModel == 0)
+                    {
+                        if(values[i] != 0)
+                        {
+                            this.AddItemToShopingCart(ids[i]);
+                            this.ChangeAmountOfItemInShopingCart(ids[i], values[i]);
+                        }
+                    }
+                    else
+                    {
+                        if(values[i] == 0)
+                        {
+                            this.RemoveItemFromShopingCart(ids[i]);
+                        }
+                        else
+                        {
+                            this.ChangeAmountOfItemInShopingCart(ids[i], values[i]);
+                        }
+                    }
+                }
+                ReadInShopingCartData();
+                this.ViewData["cart"] = shopingCartModel.ShopingCart;
+            }
+            else
+            {
+                //Case where input was invalid somehow modify soping cart to produce error message.
+            }
+            return View("ShoppingCart");
+        }
+
+
         //Removes item of the given id from the model
         private void RemoveAction(int id)
         {

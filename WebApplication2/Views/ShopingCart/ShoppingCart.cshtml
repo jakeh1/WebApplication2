@@ -52,12 +52,7 @@
     <p>
         Please feel free to add items to your cart. After addind items, you will also be able to change the quantity and take items out of your cart if you change your mind.
     </p>
-    @using (Html.BeginForm("UpdateBread", CONTROLLER_NAME, FormMethod.Post))
-    {
-        @Html.TextBoxFor(model => model.Email)
-        @Html.ValidationMessageFor(model => model.Email)
-        <button type="submit">Subscribe</button>
-    }
+    
     <p>Fresh Bread : $3.00    @Html.ActionLink("Add 1", "AddActionBread", CONTROLLER_NAME, null) @Html.ActionLink(" Remove 1", "RemoveActionBread", CONTROLLER_NAME, null) Current Quantity: @breadAmount</p>
     <p>Banana Bread : $4.00    @Html.ActionLink("Add 1", "AddActionBananaBread", CONTROLLER_NAME, null) @Html.ActionLink(" Remove 1", "RemoveActionBananaBread", CONTROLLER_NAME, null) Current Quantity: @bananaBreadAmount</p>
     <p>Cookies : $3.50    @Html.ActionLink("Add 1", "AddActionCookies", CONTROLLER_NAME, null) @Html.ActionLink("Remove 1", "RemoveActionCookies", CONTROLLER_NAME, null) Current Quantity: @cookiesAmount</p>
