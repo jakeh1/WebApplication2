@@ -197,7 +197,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateCartData(int id, FormCollection collection)
+        public ActionResult UpdateCartData(FormCollection collection)
         {
             bool validInput = true;
             int[] ids = { BREAD, BANANA_BREAD, COOKIES, MUFFINS, DONUTS };

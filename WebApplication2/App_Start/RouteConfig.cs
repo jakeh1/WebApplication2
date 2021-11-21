@@ -71,7 +71,7 @@ namespace WebApplication2
             routes.MapRoute(
               name: "ShopingCartUpdateCartData",
               url: "ShopingCartController/{action}",
-              defaults: new { controller = "ShopingCartController", action = "UpdateCartData" }
+              defaults: new { controller = "ShopingCartController", action = "UpdateCartData", id = "" }
           );
         }
     }
