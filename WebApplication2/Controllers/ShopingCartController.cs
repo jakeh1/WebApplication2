@@ -197,11 +197,11 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateItemAmounts(string breadamount, string bananaBreadAmount, string cookiesAmount, string muffinsAmount, string donutsAmount)
+        public ActionResult UpdateCartData(int id, FormCollection collection)
         {
             bool validInput = true;
             int[] ids = { BREAD, BANANA_BREAD, COOKIES, MUFFINS, DONUTS };
-            string[] stringValues = { breadamount, bananaBreadAmount, cookiesAmount, muffinsAmount, donutsAmount };
+            string[] stringValues = { collection["breadText"], collection["bananaText"], collection["cookiesText"], collection["muffinText"], collection["donutText"] };
             int[] values = new int[5];
             for(int i = 0; i < 5; i++)
             {
@@ -253,7 +253,7 @@ namespace WebApplication2.Controllers
             }
             else
             {
-                //Case where input was invalid somehow modify soping cart to produce error message.
+                //Case where input was invalid somehow modify soping cart to produce error message return invalid input view.
             }
             return View("ShoppingCart");
         }

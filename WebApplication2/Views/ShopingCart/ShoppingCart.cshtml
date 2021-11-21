@@ -52,12 +52,38 @@
     <p>
         Please feel free to add items to your cart. After addind items, you will also be able to change the quantity and take items out of your cart if you change your mind.
     </p>
-    
-    <p>Fresh Bread : $3.00    @Html.ActionLink("Add 1", "AddActionBread", CONTROLLER_NAME, null) @Html.ActionLink(" Remove 1", "RemoveActionBread", CONTROLLER_NAME, null) Current Quantity: @breadAmount</p>
-    <p>Banana Bread : $4.00    @Html.ActionLink("Add 1", "AddActionBananaBread", CONTROLLER_NAME, null) @Html.ActionLink(" Remove 1", "RemoveActionBananaBread", CONTROLLER_NAME, null) Current Quantity: @bananaBreadAmount</p>
-    <p>Cookies : $3.50    @Html.ActionLink("Add 1", "AddActionCookies", CONTROLLER_NAME, null) @Html.ActionLink("Remove 1", "RemoveActionCookies", CONTROLLER_NAME, null) Current Quantity: @cookiesAmount</p>
-    <p>Muffins : $3.75    @Html.ActionLink("Add 1", "AddActionMuffins", CONTROLLER_NAME, null) @Html.ActionLink("Remove 1", "RemoveActionMuffins", CONTROLLER_NAME, null) Current Quantity: @muffinsAmount</p>
-    <p>Donuts : $2.50    @Html.ActionLink("Add 1", "AddActionDonuts", CONTROLLER_NAME, null) @Html.ActionLink("Remove 1", "RemoveActionDonuts", CONTROLLER_NAME, null) Current Quantity: @donutsAmount</p>
+    <form id="orderForm" method="post" action="UpdateCartData">
+        <div>
+            <label for="Bread">Bread : $3.00</label>
+            <input type="text" name="breadText" value=@breadAmount />
+        </div>
+        <div>
+            <label for="BananaBread">Banana Bread : $4.00</label>
+            <input type="text" name="bananaText" value=@bananaBreadAmount />
+        </div>
+        <div>
+            <label for="Cookies">Cookies : $3.50</label>
+            <input type="text" name="cookiesText" value=@cookiesAmount />
+        </div>
+        <div>
+            <label for="Muffins">Muffins : $3.75</label>
+            <input type="text" name="muffinText" value=@muffinsAmount />
+        </div>
+        <div>
+            <label for="Donuts">Donuts : $2.50</label>
+            <input type="text" name="donutText" value=@donutsAmount />
+        </div>
+        <div>
+            <label for="Name">Name</label>
+            <input type="text" name="nameText" />
+        </div>
+        <div>
+            <label for="CreditCard">Credit Card Numeber</label>
+            <input type="text" name="creditCardtText" />
+        </div>
+        <input type="submit" id="submit1" value="Order" />
+    </form>
     <p> Total Price: $@total</p>
+
 </body>
 <footer>Copyright &copy 2021 by UW-Platteville</footer>

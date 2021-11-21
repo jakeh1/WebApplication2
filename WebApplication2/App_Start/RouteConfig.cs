@@ -68,6 +68,11 @@ namespace WebApplication2
                url: "ShopingCartController/{action}",
                defaults: new { controller = "ShopingCartController", action = "RemoveActionDonuts" }
            );
+            routes.MapRoute(
+              name: "ShopingCartUpdateCartData",
+              url: "ShopingCartController/{action}",
+              defaults: new { controller = "ShopingCartController", action = "UpdateCartData" }
+          );
         }
     }
 }
