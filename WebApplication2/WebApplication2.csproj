@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ShopingCartController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -128,6 +129,7 @@
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ShopingCartItem.cs" />
     <Compile Include="Models\ShopingCartModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AJAXExample.aspx.cs">
       <DependentUpon>AJAXExample.aspx</DependentUpon>
@@ -152,6 +154,8 @@
     <Content Include="AJAXExample.aspx" />
     <Content Include="XML\ItemData.xml" />
     <Content Include="XML\ShopingCartData.xml" />
+    <Content Include="XML\ShopingCartHistory.xml" />
+    <Content Include="XML\UserData.xml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -182,9 +186,12 @@
     <Content Include="Views\Home\PagesWithInfo.cshtml" />
     <Content Include="Views\Home\News.cshtml" />
     <Content Include="Views\ShopingCart\ShoppingCart.cshtml" />
+    <Content Include="Views\ShopingCart\CartLogIn.cshtml" />
+    <Content Include="Views\ShopingCart\OrderHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
