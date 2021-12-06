@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <users>
-  <user id="0" userName="jeff" tempPassHash=""></user>
-  <user id="1" userName="jeff2" tempPassHash=""></user>
+  <user id="0" userName="jeff" tempPassHash="" email="bob@bob.com"></user>
+  <user id="1" userName="jeff2" tempPassHash="" email="jeff@jeff.com"></user>
 </users>

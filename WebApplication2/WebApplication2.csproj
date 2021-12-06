@@ -120,6 +120,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ShopingCartController.cs" />
@@ -154,7 +155,6 @@
     <Content Include="AJAXExample.aspx" />
     <Content Include="XML\ItemData.xml" />
     <Content Include="XML\ShopingCartData.xml" />
-    <Content Include="XML\ShopingCartHistory.xml" />
     <Content Include="XML\UserData.xml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -191,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\History\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>

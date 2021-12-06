@@ -16,6 +16,10 @@ namespace WebApplication2.Controllers
         private const int COOKIES = 2;
         private const int MUFFINS = 3;
         private const int DONUTS = 4;
+        private const int ID_INDEX = 0;
+        private const int NAME_INDEX = 1;
+        private const int PRICE_INDEX = 3;
+        private const int AMOUNT_INDEX = 4;
 
         private string ITEMS_PATH = Path.GetFullPath("Data//XML//ItemData.xml");
         private  string SHOPING_CART_PATH = Path.GetFullPath("Data//XML//ShopingCartData.xml");
@@ -298,22 +302,25 @@ namespace WebApplication2.Controllers
             }
             if (data != null)
             {
+                int userId = (Session["user"] as UserModel).id;
                 XmlDocument xmlDocument = new XmlDocument();
                 FileStream file = new FileStream(SHOPING_CART_PATH, FileMode.Open);
                 xmlDocument.Load(file);
                 XmlElement newItem = xmlDocument.CreateElement("item");
-                XmlElement newName = xmlDocument.CreateElement("name");
-                XmlElement newPrice = xmlDocument.CreateElement("price");
-                XmlElement newAmount = xmlDocument.CreateElement("amount");
                 newItem.SetAttribute("id", data.Id.ToString());
-                newName.InnerText = data.Name;
-                newAmount.InnerText = "1";
-                newPrice.InnerText = data.Price.ToString();
-                newItem.AppendChild(newName);
-                newItem.AppendChild(newPrice);
-                newItem.AppendChild(newAmount);
-                XmlElement cart = (XmlElement)xmlDocument.GetElementsByTagName("cart")[0];
-                cart.AppendChild(newItem);
+                newItem.SetAttribute("name", data.Name);
+                newItem.SetAttribute("price", data.Price.ToString());
+                newItem.SetAttribute("amount", "1");
+                
+                XmlNodeList carts = xmlDocument.GetElementsByTagName("cart");
+                foreach(XmlNode node in carts)
+                {
+                    if (int.Parse(node.Attributes[0].Value) == userId && node.Attributes[1].Value == "T")
+                    {
+                        node.AppendChild(newItem);
+                        break;
+                    }
+                }
                 file.Close();
                 xmlDocument.Save(SHOPING_CART_PATH);
             }
@@ -335,18 +342,28 @@ namespace WebApplication2.Controllers
             }
             if (data != null)
             {
+                int userId = (int)Session["user"];
                 XmlDocument xmlDocument = new XmlDocument();
                 FileStream file = new FileStream(SHOPING_CART_PATH, FileMode.Open);
                 xmlDocument.Load(file);
-                XmlNodeList cart = xmlDocument.GetElementsByTagName("item");
-                XmlElement cart2 = (XmlElement)xmlDocument.GetElementsByTagName("cart")[0];
-                for (int i = 0; i < cart.Count; i++)
+                XmlNodeList nodeList = xmlDocument.GetElementsByTagName("cart");
+                foreach(XmlNode node in nodeList)
                 {
-                    XmlElement element = (XmlElement)cart[i];
-                    if (element.GetAttribute("id") == Id.ToString())
+                    if(int.Parse(node.Attributes[0].Value) == userId && node.Attributes[1].Value == "T")
                     {
-                        cart2.RemoveChild(element);
-                        break;
+                        XmlNode childToRemove = null;
+                        foreach(XmlNode child in node.ChildNodes)
+                        {
+                            if (int.Parse(child.Attributes[ID_INDEX].Value) == Id)
+                            {
+                                childToRemove = child;
+                                break;
+                            }
+                        }
+                        if(childToRemove != null)
+                        {
+                            node.RemoveChild(childToRemove);
+                        }
                     }
                 }
                 file.Close();
@@ -357,22 +374,21 @@ namespace WebApplication2.Controllers
         //Changes the amount of an item in the shoping cart xml file(update)
         private void ChangeAmountOfItemInShopingCart(int itemId, int amount)
         {
+            int userId = (int)Session["user"];
             XmlDocument xmlDocument = new XmlDocument();
             FileStream file = new FileStream(SHOPING_CART_PATH, FileMode.Open);
             xmlDocument.Load(file);
             XmlNodeList nodeList = xmlDocument.GetElementsByTagName("cart");
             foreach (XmlNode node in nodeList)
             {
-                foreach (XmlNode childNode in node.ChildNodes)
+                if (int.Parse(node.Attributes[0].Value) == userId && node.Attributes[1].Value == "T")
                 {
-                    if (childNode.Attributes[0].Value == itemId.ToString())
+                    foreach (XmlNode childNode in node.ChildNodes)
                     {
-                        foreach (XmlNode xmlNode in childNode.ChildNodes)
+                        if (childNode.Attributes[ID_INDEX].Value == itemId.ToString())
                         {
-                            if (xmlNode.Name == "amount")
-                            {
-                                xmlNode.InnerText = amount.ToString();
-                            }
+                            childNode.Attributes[AMOUNT_INDEX].Value = amount.ToString();
+                            break;
                         }
                     }
                 }
@@ -418,37 +434,26 @@ namespace WebApplication2.Controllers
         //reads in the shoping cart data from the shoping cart xml file(select)
         private void ReadInShopingCartData()
         {
-            this.shopingCartModel.ShopingCart = new List<ShopingCartItem>();
+            int userId = (int)Session["user"];
+            shopingCartModel.ShopingCart = new List<ShopingCartItem>();
             XmlDocument xmlDocument = new XmlDocument();
             FileStream file = new FileStream(SHOPING_CART_PATH, FileMode.Open);
             xmlDocument.Load(file);
             XmlNodeList nodeList = xmlDocument.GetElementsByTagName("cart");
             foreach (XmlNode node in nodeList)
             {
-                foreach (XmlNode xmlNode in node.ChildNodes)
+                if((int.Parse(node.Attributes[0].Value)) == userId && node.Attributes[1].Value == "T")
                 {
-                    ShopingCartItem item = new ShopingCartItem();
-                    XmlAttribute attribute = xmlNode.Attributes[0];
-                    item.Id = int.Parse(attribute.Value);
-                    foreach (XmlNode childNode in xmlNode.ChildNodes)
+                    foreach (XmlNode xmlNode in node.ChildNodes)
                     {
-                        if (childNode.Name == "name")
-                        {
-                            item.Name = childNode.InnerText;
-                        }
-                        else if (childNode.Name == "price")
-                        {
-                            item.Price = double.Parse(childNode.InnerText);
-                        }
-                        else
-                        {
-                            item.Amount = int.Parse(childNode.InnerText);
-                        }
+                        ShopingCartItem item = new ShopingCartItem();
+                        item.Id = int.Parse(xmlNode.Attributes[ID_INDEX].Value);
+                        item.Name = xmlNode.Attributes[NAME_INDEX].Value;
+                        item.Amount = int.Parse(xmlNode.Attributes[AMOUNT_INDEX].Value);
+                        item.Price = double.Parse(xmlNode.Attributes[PRICE_INDEX].Value);
+                        shopingCartModel.ShopingCart.Add(item);
                     }
-                    this.shopingCartModel.ShopingCart.Add(item);
-
                 }
-
             }
             file.Close();
         }

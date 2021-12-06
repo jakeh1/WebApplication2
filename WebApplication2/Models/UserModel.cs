@@ -10,6 +10,7 @@ namespace WebApplication2.Models
         public string UserName { get; set; }
         public string PasswordHash { get; set; }
         public int id { get; set; }
-        
+        public bool temporary { get; set; }
+        public string email { get; set; }
     }
 }

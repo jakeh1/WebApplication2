@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <carts>
-  <cart userId="0">
-    <item id="0">
-      <name>Bread</name>
-      <price>3</price>
-      <amount>3</amount>
-    </item>
-    <item id="2">
-      <name>Cookies</name>
-      <price>3.5</price>
-      <amount>1</amount>
-    </item>
+  <cart userId="0" current="F"> 
+    <item id="0" name="Bread" price="3" amount="3"></item>
   </cart>
 </carts>
