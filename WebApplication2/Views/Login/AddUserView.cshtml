@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "AddUserView";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Content/MyStyle.css">
+</head>
+<header>Platteville Bakery <img src="~/img/pb.jpg" /></header>
+<div class="backcolor">
+    <h1>Login Page</h1>
+</div>
+
+<body>
+    <p>
+        Please enter password below.
+    </p>
+    <form id=1 method="post" action="AddUser">
+        <div>
+            <label>User Name :</label>
+            <input type="text" name="name" />
+        </div>
+        <div>
+            <label>Email :</label>
+            <input type="text" name="email" />
+        </div>
+        <div>
+            <label>Password :</label>
+            <input type="text" name="password" />
+        </div>
+        <input type="submit" id=2 value="Create Acount" />
+    </form>
+</body>
+<footer>Copyright &copy 2021 by UW-Platteville</footer>
+
+

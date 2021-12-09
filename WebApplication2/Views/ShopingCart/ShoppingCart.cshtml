@@ -71,16 +71,21 @@
             <input type="text" name="donutText" value=@donutsAmount />
         </div>
         <div>
-            <label for="Name">Name</label>
-            <input type="text" name="nameText" />
-        </div>
-        <div>
             <label for="CreditCard">Credit Card Numeber</label>
             <input type="text" name="creditCardtText" />
         </div>
-        <input type="submit" id=2 value="Order" />
+        <input type="submit" id=2 value="Save and Calculate" />
     </form>
     <p> Total Price: $@total</p>
+    <br />
+    <br />
+    <form id=3 method="post" action="PlaceOrder">
+        <div>
+            <label for="CreditCard">Credit Card Numeber</label>
+            <input type="text" name="creditCardNumber" />
+        </div>
+        <input type="submit" id=4 value="Order" />
+    </form>
 
 </body>
 <footer>Copyright &copy 2021 by UW-Platteville</footer>

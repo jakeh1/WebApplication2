@@ -18,8 +18,8 @@ namespace WebApplication2.Controllers
         private const int DONUTS = 4;
         private const int ID_INDEX = 0;
         private const int NAME_INDEX = 1;
-        private const int PRICE_INDEX = 3;
-        private const int AMOUNT_INDEX = 4;
+        private const int PRICE_INDEX = 2;
+        private const int AMOUNT_INDEX = 3;
 
         private string ITEMS_PATH = Path.GetFullPath("Data//XML//ItemData.xml");
         private  string SHOPING_CART_PATH = Path.GetFullPath("Data//XML//ShopingCartData.xml");
@@ -31,18 +31,52 @@ namespace WebApplication2.Controllers
 
         public ActionResult ShoppingCart()
         {
-            shopingCartModel = new ShopingCartModel();
-            ReadInItemData();
-            ReadInShopingCartData();
-            this.ViewData["cart"] = shopingCartModel.ShopingCart;
+            if(Session["user"] == null)
+            {
+                return View("/Views/Login/LogInUserNameView.cshtml");
+            }
+            else if(!UserModel.GetUser((int)Session["user"]).LogedIn)
+            {
+                return View("/Views/Login/LogInUserNameView.cshtml");
+            }
+            else
+            {
+                shopingCartModel = new ShopingCartModel();
+                ReadInItemData();
+                ReadInShopingCartData();
+                this.ViewData["cart"] = shopingCartModel.ShopingCart;
 
-            return View();
+                return View();
+            }
+            
         }
 
         // GET: ShopingCart/Details/5
         public ActionResult Details(int id)
         {
             return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult PlaceOrder(FormCollection collection)
+        {
+            string cridtCardNum = collection["creditCartNumber"];
+            int userId = (int)Session["user"];
+            XmlDocument xmlDocument = new XmlDocument();
+            FileStream file = new FileStream(SHOPING_CART_PATH, FileMode.Open);
+            xmlDocument.Load(file);
+            XmlNodeList nodeList = xmlDocument.GetElementsByTagName("cart");
+            foreach (XmlNode node in nodeList)
+            {
+                if (int.Parse(node.Attributes[0].Value) == userId && node.Attributes[1].Value == "T")
+                {
+                    node.Attributes[1].Value = "F";
+                }
+            }
+            file.Close();
+            xmlDocument.Save(SHOPING_CART_PATH);
+            return View("OrderPlacedView");
         }
 
         // GET: ShopingCart/Create
@@ -302,7 +336,7 @@ namespace WebApplication2.Controllers
             }
             if (data != null)
             {
-                int userId = (Session["user"] as UserModel).id;
+                int userId = (int)Session["user"];
                 XmlDocument xmlDocument = new XmlDocument();
                 FileStream file = new FileStream(SHOPING_CART_PATH, FileMode.Open);
                 xmlDocument.Load(file);
@@ -434,6 +468,11 @@ namespace WebApplication2.Controllers
         //reads in the shoping cart data from the shoping cart xml file(select)
         private void ReadInShopingCartData()
         {
+            bool makeNewCart = true;
+            if(Session["user"] == null)
+            {
+                return;
+            }
             int userId = (int)Session["user"];
             shopingCartModel.ShopingCart = new List<ShopingCartItem>();
             XmlDocument xmlDocument = new XmlDocument();
@@ -444,8 +483,9 @@ namespace WebApplication2.Controllers
             {
                 if((int.Parse(node.Attributes[0].Value)) == userId && node.Attributes[1].Value == "T")
                 {
+                    makeNewCart = false;
                     foreach (XmlNode xmlNode in node.ChildNodes)
-                    {
+                    { 
                         ShopingCartItem item = new ShopingCartItem();
                         item.Id = int.Parse(xmlNode.Attributes[ID_INDEX].Value);
                         item.Name = xmlNode.Attributes[NAME_INDEX].Value;
@@ -456,7 +496,29 @@ namespace WebApplication2.Controllers
                 }
             }
             file.Close();
+            if (makeNewCart)
+            {
+                MakeNewCart();
+            }
         }
+
+        private void MakeNewCart()
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            FileStream file = new FileStream(SHOPING_CART_PATH, FileMode.Open);
+            xmlDocument.Load(file);
+            XmlNodeList nodeList = xmlDocument.GetElementsByTagName("carts");
+            foreach(XmlNode node in nodeList)
+            {
+                XmlElement newCart = xmlDocument.CreateElement("cart");
+                newCart.SetAttribute("userId", Session["user"].ToString());
+                newCart.SetAttribute("current", "T");
+                node.AppendChild(newCart);
+            }
+            file.Close();
+            xmlDocument.Save(SHOPING_CART_PATH);
+        }
+
         //looks for the amount of an item in the model
         private int CheckModelForItem(int id)
         {

@@ -8,12 +8,16 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using WebApplication2.Models;
+using EASendMail;
+
 
 namespace WebApplication2.Controllers
 {
     public class LoginController : Controller
     {
-        private const string PATH = "Data//XML//UserData.xml";
+        private const string USER_LOGIN = "LoginUserNameView";
+        private const string PASSWORD_LOGIN = "LoginPasswordView";
+        private const string HOME_VIEW = "/Views/Home/Index.cshtml";
         
         // GET: Login
         public ActionResult Index()
@@ -21,48 +25,82 @@ namespace WebApplication2.Controllers
             return View();
         }
 
+        public ActionResult AddUserView()
+        {
+            return View("AddUserView");
+        }
+
+        public ActionResult LogInPasswordView()
+        {
+            return View(PASSWORD_LOGIN);
+        }
+
+        public ActionResult LogInUserNameView()
+        {
+            if(Session["user"] != null)
+            {
+                if (UserModel.GetUser((int)Session["user"]).LogedIn)
+                {
+                    return View("LogoutView");
+                }
+                else
+                {
+                    Session.Clear();
+                    return View("LogoutView");
+                }
+            }
+            else
+            {
+                return View(USER_LOGIN);
+            }
+
+            
+        }
+
+
         //When the username is submited
         [HttpPost]
         public ActionResult LoginUsername(FormCollection collection)
         {
-            List<UserModel> users = GetUsers();
+            List<UserModel> users = UserModel.GetUsers();
             string username = "";
-            
+            //add password stuff
             foreach(UserModel user in users)
             {
-                if(user.UserName == collection["username"])
+                if(user.UserName == collection["username"] && user.PasswordHash == HashPassword(collection["password"]))
                 {
                     username = user.UserName;
                     int uId = user.id;
-                    string tempPass = GeneratePassword();
-                    string passHash = HashPassword(tempPass);
-                    SendPassword(uId, tempPass);
-                    user.PasswordHash = passHash;
+                    string authCode = GenerateAuthCode();
+                    string authHash = HashPassword(authCode);
+                    SendAuthCode(uId, authCode);
+                    user.PasswordHash = authHash;
+                    UserModel.ChangeUserAuthCode(uId, authHash);
                     Session["user"] = user.id;
                     break;
                 }    
             }
             if(username == "") 
             {
-                //Return error message
+                return View(USER_LOGIN);
             }
-            return View();
+            return View(PASSWORD_LOGIN);
         }
 
         //when the password is submited
         [HttpPost]
         public ActionResult LoginPassword(FormCollection collection)
         {
-            string viewName = "Login";
-            if(GetUser(Session["user"] as int?).PasswordHash == HashPassword(collection["password"]))
+            
+            if(UserModel.GetUser(Session["user"] as int?).AuthCodeHash == HashPassword(collection["password"]))
             {
-                Session["acess"] = true;
-                
+                UserModel.LogUserIn((int)Session["user"]);
+                return View(HOME_VIEW);
             }
             else
             {
                 Session.Clear();
-                //error messgae send back to login page.
+                return View(USER_LOGIN);
             }
         }
 
@@ -70,12 +108,16 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult AddUser(FormCollection collection)
         {
-            //Add uesr to the xml file.
+            UserModel.AddUser(collection["name"], collection["email"], HashPassword(collection["password"]));
+            Session.Clear();
+            return View(USER_LOGIN);
         }
 
         public ActionResult LogOut()
         {
+            UserModel.LogUserOut((int)Session["user"]);
             Session.Clear();
+            return View(USER_LOGIN);
         }
 
         private string HashPassword(string password)
@@ -90,25 +132,24 @@ namespace WebApplication2.Controllers
                 stringBuilder.Append(hash[i].ToString("X2"));
             }
             string hashPass = stringBuilder.ToString();
-            //Todo send hashed password to the file
             return hashPass;
         }
 
-        private string GeneratePassword()
+        private string GenerateAuthCode()
         {
             string password = "";
             Random random = new Random();
             for(int i = 0; i < 15; i++)
             {
-                int numOrLeter = random.Next(0, 1);
+                int numOrLeter = random.Next(1, 10);
                 char randomChar;
-                if(numOrLeter == 1) //numbers
+                if(numOrLeter <= 5) //numbers
                 {
                     randomChar = Convert.ToChar(random.Next(48,57));
                 }
                 else //letters
                 {
-                    if(random.Next(0,1) == 0) //upper case
+                    if(random.Next(1,10) <= 5) //upper case
                     {
                         randomChar = Convert.ToChar(random.Next(65, 90));
                     }
@@ -122,51 +163,37 @@ namespace WebApplication2.Controllers
             }
             return password;
         }
-        private void SendPassword(int id, string password)
+        private void SendAuthCode(int id, string password)
         {
-            //TODO open file and save to it
-        }
-        //Clears out the password and the password hash.
-        private void ClearPassword(int uId)
-        {
-        }
-
-        //Reads in the user data from the xml file
-        private List<UserModel> GetUsers()
-        {
-            List<UserModel> userModels = new List<UserModel>();
-            XmlDocument xmlDocument = new XmlDocument();
-            FileStream file = new FileStream(PATH, FileMode.Open);
-            xmlDocument.Load(file);
-            XmlNodeList nodeList = xmlDocument.GetElementsByTagName("user");
-            foreach(XmlNode node in nodeList)
+            try
             {
-                UserModel userModel = new UserModel();
-                userModel.id = int.Parse(node.Attributes[0].Value);
-                userModel.temporary = false;
-                userModel.UserName = node.Attributes[1].Value;
-                userModel.PasswordHash = node.Attributes[2].Value;
-                userModel.email = node.Attributes[3].Value;
-                userModels.Add(userModel);
-            }
-            file.Close();
-            return userModels;
-        }
+                SmtpMail oMail = new SmtpMail("TryIt");
 
-        private UserModel GetUser(int? id)
-        {
-            if(id != null)
-            {
-                List<UserModel> userModels = GetUsers();
-                foreach (UserModel user in userModels)
-                {
-                    if (user.id == id)
-                    {
-                        return user;
-                    }
-                }
+                oMail.From = "UWPlattBakerySite@gmail.com";
+                oMail.To = UserModel.GetUser(id).email;
+
+                
+                oMail.Subject = "UWPlatt Bakery Authentication Code";
+                oMail.TextBody = password;
+                SmtpServer oServer = new SmtpServer("smtp.gmail.com");
+
+                
+                oServer.User = "UWPlattBakerySite@gmail.com";
+                oServer.Password = "uwplatt7898!!";
+                oServer.Port = 465;
+                oServer.ConnectType = SmtpConnectType.ConnectSSLAuto;
+
+                
+
+                SmtpClient oSmtp = new SmtpClient();
+                oSmtp.SendMail(oServer, oMail);
+
+                
             }
-            return null;
+            catch (Exception ep)
+            {
+                Console.WriteLine(ep);
+            }
         }
     }
 }

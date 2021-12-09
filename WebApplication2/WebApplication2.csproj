@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EASendMail, Version=7.8.0.1, Culture=neutral, PublicKeyToken=88adb80ecd66540b, processorArchitecture=MSIL">
+      <HintPath>..\packages\EASendMail.7.8.0.1\lib\net461\EASendMail.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -186,13 +189,15 @@
     <Content Include="Views\Home\PagesWithInfo.cshtml" />
     <Content Include="Views\Home\News.cshtml" />
     <Content Include="Views\ShopingCart\ShoppingCart.cshtml" />
-    <Content Include="Views\ShopingCart\CartLogIn.cshtml" />
-    <Content Include="Views\ShopingCart\OrderHistory.cshtml" />
+    <Content Include="Views\History\HistoryView.cshtml" />
+    <Content Include="Views\Login\LogInPasswordView.cshtml" />
+    <Content Include="Views\Login\LogInUserNameView.cshtml" />
+    <Content Include="Views\ShopingCart\OrderPlacedView.cshtml" />
+    <Content Include="Views\Login\AddUserView.cshtml" />
+    <Content Include="Views\Login\LogoutView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\History\" />
-    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

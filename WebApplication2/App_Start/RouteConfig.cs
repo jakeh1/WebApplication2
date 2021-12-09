@@ -73,6 +73,16 @@ namespace WebApplication2
               url: "ShopingCartController/{action}",
               defaults: new { controller = "ShopingCartController", action = "UpdateCartData", id = "" }
           );
+            routes.MapRoute(
+               name: "ShopingCartPlaceOrder",
+               url: "{controller}/{action}",
+               defaults: new { controller = "ShopingCartController", action = "PlaceOrder" }
+           );
+            routes.MapRoute(
+              name: "LoginAddUser",
+              url: "{controller}/{action}",
+              defaults: new { controller = "LoginController", action = "AddUserView" }
+          );
         }
     }
 }
