@@ -108,6 +108,8 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult AddUser(FormCollection collection)
         {
+            //todo see if username contains xss script and see if email is a valid email format. 
+
             UserModel.AddUser(collection["name"], collection["email"], HashPassword(collection["password"]));
             Session.Clear();
             return View(USER_LOGIN);
@@ -194,6 +196,27 @@ namespace WebApplication2.Controllers
             {
                 Console.WriteLine(ep);
             }
+        }
+
+        private static bool CheakEmailFormat(string email)
+        {
+            if (email.Contains("@") && email.Contains("."))
+            {
+                string[] parts = email.Split('@');
+                if (parts.Length == 2)
+                {
+                    string[] subParts = parts[1].Split('.');
+                    if (subParts.Length == 2)
+                    {
+                        if (subParts[1].Length == 3)
+                        {
+                            return true;
+                        }
+                    }
+
+                }
+            }
+            return false;
         }
     }
 }

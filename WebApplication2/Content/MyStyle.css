@@ -16,11 +16,7 @@ footer {
     color: white
 }
 
-table, th, td {
-    border: 1px solid black;
-    width: 50%;
-    background-color: lightgrey;
-}
+
 
 #PB {
     background-color: lightskyblue
@@ -54,5 +50,15 @@ ul {
 
 nav li {
     float: left;
+}
+
+#UserLogInTable {
+    width: 10%;
+}
+
+.OtherTables{
+    border: 1px solid black;
+    width: 50%;
+    background-color: lightgrey;
 }
   
