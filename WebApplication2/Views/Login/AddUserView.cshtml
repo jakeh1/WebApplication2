@@ -15,6 +15,14 @@
     <p>
         Please enter your information below.
     </p>
+    @if (ViewData["InvalidEmail"] != null && (bool)ViewData["InvalidEmail"])
+    {
+        <p style="color:red">Invalid email format</p>
+    }
+    @if (ViewData["InvalidUserName"] != null && (bool)ViewData["InvalidUserName"])
+    {
+        <p style="color:red">Invalid user name</p>
+    }
     <form id=1 method="post" action="AddUser">
         <div>
             <label>User Name :</label>

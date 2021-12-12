@@ -37,7 +37,8 @@ namespace WebApplication2.Controllers
 
         public ActionResult LogInUserNameView()
         {
-            if(Session["user"] != null)
+            ViewData["incorrectCred"] = false;
+            if (Session["user"] != null)
             {
                 if (UserModel.GetUser((int)Session["user"]).LogedIn)
                 {
@@ -82,6 +83,7 @@ namespace WebApplication2.Controllers
             }
             if(username == "") 
             {
+                ViewData["incorrectCred"] = true;
                 return View(USER_LOGIN);
             }
             return View(PASSWORD_LOGIN);
@@ -95,6 +97,7 @@ namespace WebApplication2.Controllers
             if(UserModel.GetUser(Session["user"] as int?).AuthCodeHash == HashPassword(collection["password"]))
             {
                 UserModel.LogUserIn((int)Session["user"]);
+                Session.Timeout = 15;
                 return View(HOME_VIEW);
             }
             else
@@ -102,17 +105,37 @@ namespace WebApplication2.Controllers
                 Session.Clear();
                 return View(USER_LOGIN);
             }
+           
         }
 
 
         [HttpPost]
         public ActionResult AddUser(FormCollection collection)
         {
-            //todo see if username contains xss script and see if email is a valid email format. 
-
-            UserModel.AddUser(collection["name"], collection["email"], HashPassword(collection["password"]));
-            Session.Clear();
-            return View(USER_LOGIN);
+            //todo parse username to check for xss 
+            bool vaidInput = true;
+            if (!CheakEmailFormat(collection["email"]))
+            {
+                vaidInput = false;
+                ViewData["InvalidEmail"] = true;
+            }
+            if (!CheckIfUserNameIsUsed(collection["name"]))
+            {
+                vaidInput = false;
+                ViewData["InvalidUserName"] = true;
+            }
+            if (vaidInput)
+            {
+                UserModel.AddUser(collection["name"], collection["email"], HashPassword(collection["password"]));
+                Session.Clear();
+                return View(USER_LOGIN);
+            }
+            else
+            {
+                Session.Clear();
+                return View("AddUserView");
+            }
+            
         }
 
         public ActionResult LogOut()
@@ -174,18 +197,15 @@ namespace WebApplication2.Controllers
                 oMail.From = "UWPlattBakerySite@gmail.com";
                 oMail.To = UserModel.GetUser(id).email;
 
-                
+               
                 oMail.Subject = "UWPlatt Bakery Authentication Code";
                 oMail.TextBody = password;
                 SmtpServer oServer = new SmtpServer("smtp.gmail.com");
-
                 
                 oServer.User = "UWPlattBakerySite@gmail.com";
                 oServer.Password = "uwplatt7898!!";
                 oServer.Port = 465;
                 oServer.ConnectType = SmtpConnectType.ConnectSSLAuto;
-
-                
 
                 SmtpClient oSmtp = new SmtpClient();
                 oSmtp.SendMail(oServer, oMail);
@@ -198,7 +218,7 @@ namespace WebApplication2.Controllers
             }
         }
 
-        private static bool CheakEmailFormat(string email)
+        private bool CheakEmailFormat(string email)
         {
             if (email.Contains("@") && email.Contains("."))
             {
@@ -218,5 +238,20 @@ namespace WebApplication2.Controllers
             }
             return false;
         }
+
+        private bool CheckIfUserNameIsUsed(string username)
+        {
+            List<UserModel> models = UserModel.GetUsers();
+            foreach(UserModel model in models)
+            {
+                if(model.UserName == username)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+       
     }
 }

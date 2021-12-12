@@ -15,6 +15,9 @@
     <p>
         Please enter your username and password below.
     </p>
+        @if (ViewData["incorrectCred"] != null &&(bool)ViewData["incorrectCred"]) {
+            <p style="color:red">Incorect username or password</p>
+    }
     <form id=1 method="post" action="/Login/LoginUsername">
         <div>
             <label for="Username">Username :</label>
