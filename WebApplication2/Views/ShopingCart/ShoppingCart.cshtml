@@ -65,6 +65,9 @@
     <p>
         Added the Items you crave!
     </p>
+    @if (ViewData["invalidInput"] != null && (bool)ViewData["invalidInput"]) { 
+        <p style="color:red">Invalid Input</p>
+    }
     <form id=1 method="post" action="UpdateCartData">
         <div class="fields">
             <label for="Bread">Bread : $3.00</label>

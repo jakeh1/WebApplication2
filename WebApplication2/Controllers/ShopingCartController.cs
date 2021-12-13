@@ -291,10 +291,15 @@ namespace WebApplication2.Controllers
                 }
                 ReadInShopingCartData();
                 this.ViewData["cart"] = shopingCartModel.ShopingCart;
+                ViewData["invalidInput"] = false;
             }
             else
             {
-                //Case where input was invalid somehow modify soping cart to produce error message return invalid input view.
+                shopingCartModel = new ShopingCartModel();
+                ReadInItemData();
+                ReadInShopingCartData();
+                this.ViewData["cart"] = shopingCartModel.ShopingCart;
+                ViewData["invalidInput"] = true;
             }
             return View("ShoppingCart");
         }
