@@ -61,4 +61,18 @@ nav li {
     width: 50%;
     background-color: lightgrey;
 }
-  
+
+.fields {
+    width: 600px;
+}
+
+.fields > label {
+        display: inline-block;
+        width: 100px;
+        font-weight: bold;
+        vertical-align: -1px;
+    }
+
+    .fields > span {
+        display: inline-block;
+    }

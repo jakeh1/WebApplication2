@@ -39,50 +39,63 @@
 
 <head>
     <link rel="stylesheet" href="~/Content/MyStyle.css">
+    <style>
+        .fields {
+            width: 600px;
+        }
+
+            .fields > label {
+                display: inline-block;
+                width: 150px;
+                font-weight: bold;
+                vertical-align: -1px;
+            }
+
+            .fields > span {
+                display: inline-block;
+            }
+    </style>
 </head>
 <header>Platteville Bakery <img src="~/img/pb.jpg" /></header>
-<div class="backcolor">
+<div >
     <h1>Shopping Cart</h1>
 </div>
 
 <body>
     <p>
-        Please feel free to add items to your cart. After addind items, you will also be able to change the quantity and take items out of your cart if you change your mind.
+        Added the Items you crave!
     </p>
     <form id=1 method="post" action="UpdateCartData">
-        <div>
+        <div class="fields">
             <label for="Bread">Bread : $3.00</label>
-            <input type="text" name="breadText" value=@breadAmount />
+            <span><input type="text" name="breadText" value=@breadAmount /></span>
         </div>
-        <div>
+        <div class="fields">
             <label for="BananaBread">Banana Bread : $4.00</label>
-            <input type="text" name="bananaText" value=@bananaBreadAmount />
+            <span><input type="text" name="bananaText" value=@bananaBreadAmount /></span>
         </div>
-        <div>
+        <div class="fields">
             <label for="Cookies">Cookies : $3.50</label>
-            <input type="text" name="cookiesText" value=@cookiesAmount />
+            <span><input type="text" name="cookiesText" value=@cookiesAmount /></span>
         </div>
-        <div>
+        <div class="fields">
             <label for="Muffins">Muffins : $3.75</label>
-            <input type="text" name="muffinText" value=@muffinsAmount />
+            <span><input type="text" name="muffinText" value=@muffinsAmount /></span>
         </div>
-        <div>
+        <div class="fields">
             <label for="Donuts">Donuts : $2.50</label>
-            <input type="text" name="donutText" value=@donutsAmount />
-        </div>
-        <div>
-            <label for="CreditCard">Credit Card Numeber</label>
-            <input type="text" name="creditCardtText" />
+            <span><input type="text" name="donutText" value=@donutsAmount /></span>
         </div>
         <input type="submit" id=2 value="Save and Calculate" />
     </form>
+    <br />
     <p> Total Price: $@total</p>
     <br />
     <br />
     <form id=3 method="post" action="PlaceOrder">
-        <div>
+        <div class="fields">
             <label for="CreditCard">Credit Card Numeber</label>
-            <input type="text" name="creditCardNumber" />
+            <span><input type="text" name="creditCardNumber" /></span>
         </div>
         <input type="submit" id=4 value="Order" />
     </form>

@@ -5,9 +5,25 @@
 
 <head>
     <link rel="stylesheet" href="~/Content/MyStyle.css">
+    <style>
+        .fields {
+            width: 600px;
+        }
+
+            .fields > label {
+                display: inline-block;
+                width: 100px;
+                font-weight: bold;
+                vertical-align: -1px;
+            }
+
+            .fields > span {
+                display: inline-block;
+            }
+    </style>
 </head>
 <header>Platteville Bakery <img src="~/img/pb.jpg" /></header>
-<div class="backcolor">
+<div>
     <h1>New User</h1>
 </div>
 
@@ -24,17 +40,17 @@
         <p style="color:red">Invalid user name</p>
     }
     <form id=1 method="post" action="AddUser">
-        <div>
-            <label>User Name :</label>
-            <input type="text" name="name" />
+        <div class="fields">
+            <label>User Name:</label>
+            <span><input type="text" name="name" /></span>
         </div>
-        <div>
-            <label>Email :</label>
-            <input type="text" name="email" />
+        <div class="fields">
+            <label>Email:</label>
+            <span><input type="text" name="email" /></span>
         </div>
-        <div>
-            <label>Password :</label>
-            <input type="text" name="password" />
+        <div class="fields">
+            <label>Password:</label>
+            <span><input type="text" name="password"/></span>
         </div>
         <input type="submit" id=2 value="Create Acount" />
     </form>

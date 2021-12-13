@@ -5,9 +5,25 @@
 
 <head>
     <link rel="stylesheet" href="~/Content/MyStyle.css">
+    <style>
+        .fields {
+            width: 600px;
+        }
+
+            .fields > label {
+                display: inline-block;
+                width: 100px;
+                font-weight: bold;
+                vertical-align: -1px;
+            }
+
+            .fields > span {
+                display: inline-block;
+            }
+    </style>
 </head>
 <header>Platteville Bakery <img src="~/img/pb.jpg" /></header>
-<div class="backcolor">
+<div>
     <h1>Login Page</h1>
 </div>
 
@@ -19,13 +35,13 @@
             <p style="color:red">Incorect username or password</p>
     }
     <form id=1 method="post" action="/Login/LoginUsername">
-        <div>
+        <div class="fields">
             <label for="Username">Username :</label>
-            <input type="text" name="username" />
+            <span><input type="text" name="username" /></span>
         </div>
-        <div>
+        <div class="fields">
             <label for="Username">Password :</label>
-            <input type="password" name="password" />
+            <span><input type="password" name="password" /></span>
         </div>
 
         <input type="submit" id=2 value="Login" />

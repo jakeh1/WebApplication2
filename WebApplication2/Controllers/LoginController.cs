@@ -42,12 +42,14 @@ namespace WebApplication2.Controllers
             {
                 if (UserModel.GetUser((int)Session["user"]).LogedIn)
                 {
+                    ViewData["username"] = UserModel.GetUser((int)Session["user"]).UserName;
+                    ViewData["email"] = UserModel.GetUser((int)Session["user"]).email;
                     return View("LogoutView");
                 }
                 else
                 {
                     Session.Clear();
-                    return View("LogoutView");
+                    return View(USER_LOGIN);
                 }
             }
             else
@@ -63,6 +65,7 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult LoginUsername(FormCollection collection)
         {
+            Session.Clear();
             List<UserModel> users = UserModel.GetUsers();
             string username = "";
             //add password stuff
@@ -120,6 +123,16 @@ namespace WebApplication2.Controllers
                 ViewData["InvalidEmail"] = true;
             }
             if (!CheckIfUserNameIsUsed(collection["name"]))
+            {
+                vaidInput = false;
+                ViewData["InvalidUserName"] = true;
+            }
+            if(!CheckForXSS(collection["email"]))
+            {
+                vaidInput = false;
+                ViewData["InvalidEmail"] = true;
+            }
+            if (!CheckForXSS(collection["name"]))
             {
                 vaidInput = false;
                 ViewData["InvalidUserName"] = true;
@@ -252,6 +265,16 @@ namespace WebApplication2.Controllers
             return true;
         }
 
+        private bool CheckForXSS(string value)
+        {
+            string scritpTag = "<SCRIPT>";
+            string divTag = "<DIV";
+            if(value.Contains(scritpTag) || value.Contains(scritpTag.ToLower()) || value.Contains(divTag) || value.Contains(divTag.ToLower()))
+            {
+                return false;
+            }
+            return true;
+        }
        
     }
 }

@@ -1,32 +1,36 @@
 ﻿
 @{
-    
+
     ViewBag.Title = "HistoryView";
     List<WebApplication2.Models.ShopingCartModel> data = (List<WebApplication2.Models.ShopingCartModel>)ViewData["history"];
     string username = (string)ViewData["username"];
+    int i = 1;
 }
 
 <head>
     <link rel="stylesheet" href="~/Content/MyStyle.css">
 </head>
 <header>Platteville Bakery <img src="~/img/pb.jpg" /></header>
-<div class="backcolor">
+<div>
     <h1>History Page</h1>
 </div>
 <body>
     <p>
-        Below is your Order History: @username;
+        Below is your Order History: @username
     </p>
     @foreach(WebApplication2.Models.ShopingCartModel cartModel in data)
     {
+        
+        <div>Order Number:: @i</div>
+        i = i + 1;
         double total = 0;
         foreach(WebApplication2.Models.ShopingCartItem item in cartModel.ShopingCart)
         {
             total = (item.Amount * item.Price) + total;
-                    <div>@item.Name ::  @item.Amount</div>
+                    <div>@item.Name::  @item.Amount</div>
                 }
-                <div>Total Cost :: @total</div>
-                <br />
+                
+                <div>Total Cost:: $@total</div>
                 <br />
             }
 </body>

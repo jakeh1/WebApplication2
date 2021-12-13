@@ -87,7 +87,7 @@ namespace WebApplication2.Models
             {
                 if (int.Parse(node.Attributes[0].Value) == uId)
                 {
-                    node.Attributes[2].Value = "";
+                    node.Attributes[6].Value = "";
                     node.Attributes[4].Value = "F";
                 }
             }
