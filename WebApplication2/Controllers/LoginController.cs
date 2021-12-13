@@ -27,16 +27,19 @@ namespace WebApplication2.Controllers
 
         public ActionResult AddUserView()
         {
+            Logger.WriteActionLog("GetNewUserView", Session["user"] as int?);
             return View("AddUserView");
         }
 
         public ActionResult LogInPasswordView()
         {
+            Logger.WriteActionLog("GetLogInPasswordView", Session["user"] as int?);
             return View(PASSWORD_LOGIN);
         }
 
         public ActionResult LogInUserNameView()
         {
+            Logger.WriteActionLog("GetLogInUserNameView", Session["user"] as int?);
             ViewData["incorrectCred"] = false;
             if (Session["user"] != null)
             {
@@ -65,10 +68,10 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult LoginUsername(FormCollection collection)
         {
+            Logger.WriteActionLog("PostLoginUsername", Session["user"] as int?);
             Session.Clear();
             List<UserModel> users = UserModel.GetUsers();
             string username = "";
-            //add password stuff
             foreach(UserModel user in users)
             {
                 if(user.UserName == collection["username"] && user.PasswordHash == HashPassword(collection["password"]))
@@ -96,8 +99,8 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult LoginPassword(FormCollection collection)
         {
-            
-            if(UserModel.GetUser(Session["user"] as int?).AuthCodeHash == HashPassword(collection["password"]))
+            Logger.WriteActionLog("PostLoginPassword", Session["user"] as int?);
+            if (UserModel.GetUser(Session["user"] as int?).AuthCodeHash == HashPassword(collection["password"]))
             {
                 UserModel.LogUserIn((int)Session["user"]);
                 Session.Timeout = 15;
@@ -105,6 +108,7 @@ namespace WebApplication2.Controllers
             }
             else
             {
+                Session.Abandon();
                 Session.Clear();
                 return View(USER_LOGIN);
             }
@@ -115,7 +119,8 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult AddUser(FormCollection collection)
         {
-            //todo parse username to check for xss 
+
+            Logger.WriteActionLog("PostAddUser", Session["user"] as int?);
             bool vaidInput = true;
             if (!CheakEmailFormat(collection["email"]))
             {
@@ -153,6 +158,7 @@ namespace WebApplication2.Controllers
 
         public ActionResult LogOut()
         {
+            Logger.WriteActionLog("Logout", Session["user"] as int?);
             UserModel.LogUserOut((int)Session["user"]);
             Session.Clear();
             return View(USER_LOGIN);
@@ -275,6 +281,8 @@ namespace WebApplication2.Controllers
             }
             return true;
         }
+
+        
        
     }
 }

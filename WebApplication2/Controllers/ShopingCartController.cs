@@ -31,7 +31,8 @@ namespace WebApplication2.Controllers
 
         public ActionResult ShoppingCart()
         {
-            if(Session["user"] == null)
+            Logger.WriteActionLog("GetShoppingCart", Session["user"] as int?);
+            if (Session["user"] == null)
             {
                 return View("/Views/Login/LogInUserNameView.cshtml");
             }
@@ -61,6 +62,7 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult PlaceOrder(FormCollection collection)
         {
+            Logger.WriteActionLog("PostPlaceOrder", Session["user"] as int?);
             string cridtCardNum = collection["creditCartNumber"];
             int userId = (int)Session["user"];
             XmlDocument xmlDocument = new XmlDocument();
@@ -237,6 +239,7 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult UpdateCartData(FormCollection collection)
         {
+            Logger.WriteActionLog("PostUpdateCartData", Session["user"] as int?);
             bool validInput = true;
             int[] ids = { BREAD, BANANA_BREAD, COOKIES, MUFFINS, DONUTS };
             string[] stringValues = { collection["breadText"], collection["bananaText"], collection["cookiesText"], collection["muffinText"], collection["donutText"] };

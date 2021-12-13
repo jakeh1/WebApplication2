@@ -26,6 +26,7 @@ namespace WebApplication2.Controllers
         // GET: History
         public ActionResult HistoryView()
         {
+            Logger.WriteActionLog("GetHistory", Session["user"] as int?);
             if(Session["user"] as int? != null)
             {
                 UserModel userModel = UserModel.GetUser((int)Session["user"]);
