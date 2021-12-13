@@ -9,12 +9,16 @@ namespace WebApplication2.Models
     public class Logger
     {
         private const string PATH = "Data//action_log.txt";
-        public static void WriteActionLog(string action, int? id)
+        public static void WriteActionLog(string action, int? id, string sessionId)
         {
             string message = "";
+            if(sessionId != null)
+            {
+                message = sessionId + ":";
+            }
             if(id != null)
             {
-                message = id + ":";
+                message += id + ":";
             }
             else
             {

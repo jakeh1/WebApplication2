@@ -27,19 +27,19 @@ namespace WebApplication2.Controllers
 
         public ActionResult AddUserView()
         {
-            Logger.WriteActionLog("GetNewUserView", Session["user"] as int?);
+            Logger.WriteActionLog("GetNewUserView", Session["user"] as int?, Session.SessionID);
             return View("AddUserView");
         }
 
         public ActionResult LogInPasswordView()
         {
-            Logger.WriteActionLog("GetLogInPasswordView", Session["user"] as int?);
+            Logger.WriteActionLog("GetLogInPasswordView", Session["user"] as int?, Session.SessionID);
             return View(PASSWORD_LOGIN);
         }
 
         public ActionResult LogInUserNameView()
         {
-            Logger.WriteActionLog("GetLogInUserNameView", Session["user"] as int?);
+            Logger.WriteActionLog("GetLogInUserNameView", Session["user"] as int?, Session.SessionID);
             ViewData["incorrectCred"] = false;
             if (Session["user"] != null)
             {
@@ -68,7 +68,7 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult LoginUsername(FormCollection collection)
         {
-            Logger.WriteActionLog("PostLoginUsername", Session["user"] as int?);
+            
             Session.Clear();
             List<UserModel> users = UserModel.GetUsers();
             string username = "";
@@ -92,6 +92,7 @@ namespace WebApplication2.Controllers
                 ViewData["incorrectCred"] = true;
                 return View(USER_LOGIN);
             }
+            Logger.WriteActionLog("PostLoginUsername", Session["user"] as int?, Session.SessionID);
             return View(PASSWORD_LOGIN);
         }
 
@@ -99,7 +100,7 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult LoginPassword(FormCollection collection)
         {
-            Logger.WriteActionLog("PostLoginPassword", Session["user"] as int?);
+            Logger.WriteActionLog("PostLoginPassword", Session["user"] as int?, Session.SessionID);
             if (UserModel.GetUser(Session["user"] as int?).AuthCodeHash == HashPassword(collection["password"]))
             {
                 UserModel.LogUserIn((int)Session["user"]);
@@ -119,46 +120,55 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult AddUser(FormCollection collection)
         {
-
-            Logger.WriteActionLog("PostAddUser", Session["user"] as int?);
-            bool vaidInput = true;
-            if (!CheakEmailFormat(collection["email"]))
+            Logger.WriteActionLog("PostAddUser", Session["user"] as int?, Session.SessionID);
+            try
             {
-                vaidInput = false;
-                ViewData["InvalidEmail"] = true;
+                bool vaidInput = true;
+                if (!CheakEmailFormat(collection["email"]))
+                {
+                    vaidInput = false;
+                    ViewData["InvalidEmail"] = true;
+                }
+                if (!CheckIfUserNameIsUsed(collection["name"]))
+                {
+                    vaidInput = false;
+                    ViewData["InvalidUserName"] = true;
+                }
+                if (!CheckForXSS(collection["email"]))
+                {
+                    vaidInput = false;
+                    ViewData["InvalidEmail"] = true;
+                }
+                if (!CheckForXSS(collection["name"]))
+                {
+                    vaidInput = false;
+                    ViewData["InvalidUserName"] = true;
+                }
+                if (vaidInput)
+                {
+                    UserModel.AddUser(collection["name"], collection["email"], HashPassword(collection["password"]));
+                    Session.Clear();
+                    return View(USER_LOGIN);
+                }
+                else
+                {
+                    Session.Clear();
+                    return View("AddUserView");
+                }
             }
-            if (!CheckIfUserNameIsUsed(collection["name"]))
+            catch(Exception e)
             {
-                vaidInput = false;
-                ViewData["InvalidUserName"] = true;
-            }
-            if(!CheckForXSS(collection["email"]))
-            {
-                vaidInput = false;
-                ViewData["InvalidEmail"] = true;
-            }
-            if (!CheckForXSS(collection["name"]))
-            {
-                vaidInput = false;
-                ViewData["InvalidUserName"] = true;
-            }
-            if (vaidInput)
-            {
-                UserModel.AddUser(collection["name"], collection["email"], HashPassword(collection["password"]));
-                Session.Clear();
-                return View(USER_LOGIN);
-            }
-            else
-            {
-                Session.Clear();
                 return View("AddUserView");
             }
+
+            
+            
             
         }
 
         public ActionResult LogOut()
         {
-            Logger.WriteActionLog("Logout", Session["user"] as int?);
+            Logger.WriteActionLog("Logout", Session["user"] as int?, Session.SessionID);
             UserModel.LogUserOut((int)Session["user"]);
             Session.Clear();
             Session.Abandon();
