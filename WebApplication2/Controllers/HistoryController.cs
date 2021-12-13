@@ -9,6 +9,7 @@ using WebApplication2.Models;
 
 namespace WebApplication2.Controllers
 {
+    [RequireHttps]
     public class HistoryController : Controller
     {
         private const int ID_INDEX = 0;

@@ -7,6 +7,7 @@ using WebApplication2.Models;
 
 namespace WebApplication2.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
         public ActionResult Index()

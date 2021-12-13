@@ -13,6 +13,7 @@ using EASendMail;
 
 namespace WebApplication2.Controllers
 {
+    [RequireHttps]
     public class LoginController : Controller
     {
         private const string USER_LOGIN = "LoginUserNameView";
