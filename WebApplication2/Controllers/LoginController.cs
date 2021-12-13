@@ -161,6 +161,7 @@ namespace WebApplication2.Controllers
             Logger.WriteActionLog("Logout", Session["user"] as int?);
             UserModel.LogUserOut((int)Session["user"]);
             Session.Clear();
+            Session.Abandon();
             return View(USER_LOGIN);
         }
 
